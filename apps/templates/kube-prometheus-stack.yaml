@@ -9,8 +9,8 @@ spec:
   project: default
   source:
     chart: prometheus-community/kube-prometheus-stack
-    repoURL: https://github.com/prometheus-community/helm-charts.git
-    targetRevision: HEAD
+    repoURL: https://prometheus-community.github.io/helm-charts
+    targetRevision: 37.2.0
     helm:
       values: |
         defaultRules:
