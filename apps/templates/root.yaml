@@ -2,17 +2,18 @@ apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
   name: root
+  namespace: default
   finalizers:
   - resources-finalizer.argocd.argoproj.io
 spec:
-  destination:
-    server: https://kubernetes.default.svc
-    namespace: bitnami-argo-cd
   project: default
   source:
     path: apps/
     repoURL: https://github.com/myhailo-rudenko/argocd-app-of-apps.git
     targetRevision: HEAD
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: default
   syncPolicy:
     automated:
       prune: true
