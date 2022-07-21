@@ -1,0 +1,4 @@
+---
+apiVersion: v2
+name: another-root
+version: 1.0.0
