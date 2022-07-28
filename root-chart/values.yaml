@@ -1,0 +1,2 @@
+argocd:
+  targetRevision: 4.0.2

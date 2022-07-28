@@ -11,7 +11,7 @@ spec:
   source:
     chart: argo-cd
     repoURL: https://charts.bitnami.com/bitnami
-    targetRevision:
+    targetRevision: "{{ .Values.argocd.targetRevision }}"
     helm:
       values: |
         global:
