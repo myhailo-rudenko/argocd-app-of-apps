@@ -16,16 +16,6 @@ spec:
       values: |
         global:
           storageClass: nfs-client
-        persistence:
-          enabled: true
-          existingClaim:
-          size: 10Gi
-          accessModes:
-            - ReadWriteOnce
-          labels: {}
-          annotations: {}
-          storageClass: nfs-client
-          subPath:
         server:
           ingress:
             enabled: true
