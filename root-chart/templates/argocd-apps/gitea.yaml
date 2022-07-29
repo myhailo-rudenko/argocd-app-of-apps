@@ -16,6 +16,18 @@ spec:
       values: |
         global:
           storageClass: openebs-device
+        server:
+          ingress:
+            enabled: true
+            hostname: gitea.k8s-c02.ubn24.de
+            annotations:
+              kubernetes.io/ingress.class: nginx
+              kubernetes.io/tls-acme: 'true'
+              cert-manager.io/cluster-issuer: letsencrypt-staging
+              nginx.ingress.kubernetes.io/backend-protocol: HTTPS
+              nginx.ingress.kubernetes.io/force-ssl-redirect: 'true'
+              nginx.ingress.kubernetes.io/ssl-passthrough: 'true'
+            tls: true
   destination:
     server: https://kubernetes.default.svc
     namespace: gitea
