@@ -14,12 +14,10 @@ spec:
     targetRevision: 5.0.9
     helm:
       values: |
-        global:
-          storageClass: openebs-device
         server:
           ingress:
             enabled: true
-            hostname: gitea.k8s-c02.ubn24.de
+            hostname: gitea.eks-c01.ubn24.de
             annotations:
               kubernetes.io/ingress.class: nginx
               kubernetes.io/tls-acme: 'true'
