@@ -14,6 +14,8 @@ spec:
     targetRevision: 5.0.9
     helm:
       values: |
+        global:
+          storageClass: nfs-client
         server:
           ingress:
             enabled: true
