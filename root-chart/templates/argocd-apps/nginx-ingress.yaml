@@ -18,7 +18,7 @@ spec:
           service:
             externalTrafficPolicy: Cluster
             externalIPs:
-              - 10.1.25.11
+              - 10.10.10.11
             type: NodePort
           metrics:
             enabled: true
