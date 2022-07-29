@@ -12,6 +12,10 @@ spec:
     chart: gitea
     repoURL: https://dl.gitea.io/charts/
     targetRevision: 5.0.9
+  helm:
+    values: |
+      global:
+        storageClass: openebs-device
   destination:
     server: https://kubernetes.default.svc
     namespace: gitea
