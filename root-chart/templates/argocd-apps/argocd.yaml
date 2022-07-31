@@ -1,23 +1,22 @@
----
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: gitea
+  name: argo-cd
   namespace: argo-cd
   finalizers:
   - resources-finalizer.argocd.argoproj.io
 spec:
   project: default
   source:
-    chart: gitea
-    repoURL: https://dl.gitea.io/charts/
-    targetRevision: 5.0.9
+    chart: argo-cd
+    repoURL: https://charts.bitnami.com/bitnami
+    targetRevision: 4.0.2
     helm:
       values: |
         server:
           ingress:
             enabled: true
-            hostname: gitea.k8s-c02.ubn24.de
+            hostname: argocd.k8s-c02.ubn24.de
             annotations:
               kubernetes.io/ingress.class: nginx
               kubernetes.io/tls-acme: 'true'
@@ -28,17 +27,12 @@ spec:
             tls: true
   destination:
     server: https://kubernetes.default.svc
-    namespace: gitea
+    namespace: argo-cd
   syncPolicy:
     automated:
       prune: true
       selfHeal: true
----
-apiVersion: v1
-kind: Namespace
-metadata:
-  name: gitea
 
 # COMMENTED LINES:
 # global:
-#   storageClass: nfs-client
+#   storageClass: openebs-device
