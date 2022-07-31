@@ -1,0 +1,182 @@
+---
+# Source: root-chart/templates/argocd-apps/cert-manager/cert-manager.yaml
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: cert-manager
+---
+# Source: root-chart/templates/argocd-apps/gitea.yaml
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: gitea
+---
+# Source: root-chart/templates/argocd-apps/kube-prometheus-stack.yaml
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: monitoring
+---
+# Source: root-chart/templates/argocd-apps/root.yaml
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: argo-cd
+---
+# Source: root-chart/templates/argocd-apps/cert-manager/cert-manager.yaml
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: cert-manager
+  namespace: argo-cd
+  finalizers:
+  - resources-finalizer.argocd.argoproj.io
+spec:
+  project: default
+  source:
+    chart: cert-manager
+    repoURL: https://charts.jetstack.io
+    targetRevision: 1.8.2
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: cert-manager
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+---
+# Source: root-chart/templates/argocd-apps/gitea.yaml
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: gitea
+  namespace: argo-cd
+  finalizers:
+  - resources-finalizer.argocd.argoproj.io
+spec:
+  project: default
+  source:
+    chart: gitea
+    repoURL: https://dl.gitea.io/charts/
+    targetRevision: 5.0.9
+    helm:
+      values: |
+        server:
+          ingress:
+            enabled: true
+            hostname: gitea.eks-c01.ubn24.de
+            annotations:
+              kubernetes.io/ingress.class: nginx
+              kubernetes.io/tls-acme: 'true'
+              cert-manager.io/cluster-issuer: letsencrypt-staging
+              nginx.ingress.kubernetes.io/backend-protocol: HTTPS
+              nginx.ingress.kubernetes.io/force-ssl-redirect: 'true'
+              nginx.ingress.kubernetes.io/ssl-passthrough: 'true'
+            tls: true
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: gitea
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+---
+# Source: root-chart/templates/argocd-apps/kube-prometheus-stack.yaml
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: kube-prometheus-stack
+  namespace: argo-cd
+  finalizers:
+  - resources-finalizer.argocd.argoproj.io
+spec:
+  project: default
+  source:
+    chart: kube-prometheus-stack
+    repoURL: https://prometheus-community.github.io/helm-charts
+    targetRevision: 37.0.0
+    helm:
+      values: |
+        defaultRules:
+          rules:
+            etcd: false
+            kubeScheduler: false
+        kubeControllerManager:
+          enabled: false
+        kubeEtcd:
+          enabled: false
+        kubeScheduler:
+          enabled: false
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: monitoring
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+---
+# Source: root-chart/templates/argocd-apps/root.yaml
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: root
+  namespace: argo-cd
+  finalizers:
+  - resources-finalizer.argocd.argoproj.io
+spec:
+  project: default
+  source:
+    path: root-chart/
+    repoURL: https://github.com/myhailo-rudenko/argocd-app-of-apps.git
+    targetRevision: HEAD
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: argo-cd
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+---
+# Source: root-chart/templates/argocd-apps/cert-manager/cluster-issuers.yml
+apiVersion: cert-manager.io/v1
+kind: ClusterIssuer
+metadata:
+  name: letsencrypt-staging
+  finalizers:
+  - resources-finalizer.argocd.argoproj.io
+spec:
+  acme:
+    server: https://acme-staging-v02.api.letsencrypt.org/directory
+    email: admin@ubn24.de
+    privateKeySecretRef:
+      name: letsencrypt
+    solvers:
+    - http01:
+        ingress:
+          class: nginx
+          podTemplate:
+            spec:
+              nodeSelector:
+                "kubernetes.io/os": linux
+---
+# Source: root-chart/templates/argocd-apps/cert-manager/cluster-issuers.yml
+apiVersion: cert-manager.io/v1
+kind: ClusterIssuer
+metadata:
+  name: letsencrypt-prod
+  finalizers:
+  - resources-finalizer.argocd.argoproj.io
+spec:
+  acme:
+    server: https://acme-v02.api.letsencrypt.org/directory
+    email: admin@ubn24.de
+    privateKeySecretRef:
+      name: letsencrypt
+    solvers:
+    - http01:
+        ingress:
+          class: nginx
+          podTemplate:
+            spec:
+              nodeSelector:
+                "kubernetes.io/os": linux
