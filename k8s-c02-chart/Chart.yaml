@@ -1,0 +1,4 @@
+---
+apiVersion: v2
+name: k8s-c02-chart
+version: 1.0.0
