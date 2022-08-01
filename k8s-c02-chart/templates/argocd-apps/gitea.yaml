@@ -11,7 +11,7 @@ spec:
   source:
     chart: gitea
     repoURL: https://dl.gitea.io/charts/
-    targetRevision: 5.0.9
+    targetRevision: 4.1.1
     helm:
       values: |
         global:
