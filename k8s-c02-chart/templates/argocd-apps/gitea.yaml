@@ -16,6 +16,8 @@ spec:
       values: |
         global:
           storageClass: nfs-client
+        persistence:
+          storageClass: nfs-client
         server:
           ingress:
             enabled: true
