@@ -14,6 +14,8 @@ spec:
     targetRevision: 7.17.3
     helm:
       values: |
+        persistence:
+          storageClass: nfs-client
         ingress:
           enabled: true
           annotations:
