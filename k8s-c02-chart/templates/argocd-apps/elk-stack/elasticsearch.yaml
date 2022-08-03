@@ -15,7 +15,7 @@ spec:
     helm:
       values: |
         persistence:
-          storageClass: nfs-client
+          enabled: false
         ingress:
           enabled: true
           annotations:
