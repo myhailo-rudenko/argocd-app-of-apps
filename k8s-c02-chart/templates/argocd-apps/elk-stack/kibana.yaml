@@ -14,6 +14,7 @@ spec:
     targetRevision: 7.17.3
     helm:
       values: |
+        elasticsearchHosts: "https://elasticsearch.k8s-c02.ubn24.de"
         ingress:
           enabled: true
           annotations:
