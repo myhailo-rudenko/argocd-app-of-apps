@@ -1,0 +1,44 @@
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: elasticsearch-master
+  namespace: argo-cd
+  finalizers:
+  - resources-finalizer.argocd.argoproj.io
+spec:
+  project: default
+  source:
+    chart: elasticsearch
+    repoURL: https://helm.elastic.co
+    targetRevision: 7.17.3
+    helm:
+      values: |
+        clusterName: "elasticsearch"
+        nodeGroup: "master"
+        roles:
+          master: "true"
+          ingest: "false"
+          data: "false"
+        replicas: 3
+        antiAffinity: "soft"
+        esJavaOpts: "-Xmx128m -Xms128m"
+        resources:
+          requests:
+            cpu: "100m"
+            memory: "512M"
+          limits:
+            cpu: "1000m"
+            memory: "512M"
+        volumeClaimTemplate:
+          accessModes: [ "ReadWriteOnce" ]
+          resources:
+            requests:
+              storage: 100M
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: elastic
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
