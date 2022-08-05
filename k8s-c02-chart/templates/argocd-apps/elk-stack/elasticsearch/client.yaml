@@ -30,7 +30,7 @@ spec:
           limits:
             cpu: "1000m"
             memory: "512M"
-        persistence
+        persistence:
           enabled: false
   destination:
     server: https://kubernetes.default.svc
