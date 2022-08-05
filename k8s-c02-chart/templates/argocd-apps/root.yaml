@@ -4,8 +4,6 @@ kind: Application
 metadata:
   name: k8s-c02-root
   namespace: argo-cd
-  finalizers:
-  - resources-finalizer.argocd.argoproj.io
 spec:
   project: default
   source:
